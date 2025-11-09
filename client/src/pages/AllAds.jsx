@@ -95,7 +95,7 @@ const AllAds = ({ searchQuery }) => {
                     {filtered.map((ad) => (
                         <Link to={`/ad/${ad._id}`} key={ad._id} style={{ textDecoration: "none", color: "inherit" }}>
                             <div style={{ border: "1px solid #ccc", borderRadius: "8px", padding: "10px" }}>
-                                <img src={ad.image} style={{ width: "100%", height: 170, objectFit: "cover" }} />
+                                <img src={ad.image} loading="lazy" style={{ width: "100%", height: 170, objectFit: "cover" }} alt="AD image" />
                                 <h3>{ad.title}</h3>
                                 <h4>₹ {ad.price}</h4>
                                 <p>📍 {ad.location}</p>
