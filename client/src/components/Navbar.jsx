@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom"; // ✅ use NavLink instead of Link
 import styles from "./Navbar.module.css";
 
 const Navbar = ({ setSearchQuery }) => {
@@ -7,42 +7,82 @@ const Navbar = ({ setSearchQuery }) => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
     const [text, setText] = useState("");
 
-
     const handleLogout = () => {
         localStorage.removeItem("userInfo");
         navigate("/login");
     };
+
     const handleSearch = (e) => {
-        setText(e.target.value)
-        setSearchQuery(e.target.value)
-    }
+        setText(e.target.value);
+        setSearchQuery(e.target.value);
+    };
 
     return (
         <nav className={styles.navbar}>
+            {/* ✅ Logo */}
             <div className={styles.logo} onClick={() => navigate("/")}>
                 🛒 MyMarket
             </div>
 
+            {/* ✅ Navigation Links */}
             <div className={styles.links}>
-                <Link to="/" className={styles.link}>Home</Link>
-                <Link to="/profile" className={styles.link}>Profile</Link>
+                <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                        isActive ? `${styles.link} ${styles.active}` : styles.link
+                    }
+                >
+                    Home
+                </NavLink>
 
-
+                <NavLink
+                    to="/profile"
+                    className={({ isActive }) =>
+                        isActive ? `${styles.link} ${styles.active}` : styles.link
+                    }
+                >
+                    Profile
+                </NavLink>
 
                 {user ? (
                     <>
                         <span className={styles.welcome}>Hi, {user.name}</span>
-                        <Link to="/inbox">Inbox</Link>
+
+                        <NavLink
+                            to="/inbox"
+                            className={({ isActive }) =>
+                                isActive ? `${styles.link} ${styles.active}` : styles.link
+                            }
+                        >
+                            Inbox
+                        </NavLink>
+
                         <button onClick={handleLogout} className={styles.logoutBtn}>
                             Logout
                         </button>
                     </>
                 ) : (
                     <>
-                        <Link to="/login" className={styles.link}>Login</Link>
-                        <Link to="/register" className={styles.link}>Register</Link>
+                        <NavLink
+                            to="/login"
+                            className={({ isActive }) =>
+                                isActive ? `${styles.link} ${styles.active}` : styles.link
+                            }
+                        >
+                            Login
+                        </NavLink>
+
+                        <NavLink
+                            to="/register"
+                            className={({ isActive }) =>
+                                isActive ? `${styles.link} ${styles.active}` : styles.link
+                            }
+                        >
+                            Register
+                        </NavLink>
                     </>
                 )}
+
                 <input
                     type="text"
                     placeholder="Search item..."
@@ -52,7 +92,7 @@ const Navbar = ({ setSearchQuery }) => {
                         padding: "6px 10px",
                         borderRadius: "6px",
                         border: "1px solid #aaa",
-                        width: "200px"
+                        width: "200px",
                     }}
                 />
             </div>
