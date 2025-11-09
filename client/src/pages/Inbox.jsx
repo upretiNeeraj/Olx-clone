@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+const API_URL = import.meta.env.VITE_API_URL;
+
+
+
 
 const Inbox = () => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
@@ -11,7 +15,7 @@ const Inbox = () => {
 
         const fetchChats = async () => {
             try {
-                const res = await axios.get("http://localhost:5001/api/chat/my", {
+                const res = await axios.get(`${API_URL}/api/chat/my`, {
                     headers: { Authorization: `Bearer ${user.token}` }
                 });
                 console.log("Chats Received:", res.data);
@@ -21,7 +25,6 @@ const Inbox = () => {
                 console.log("Inbox Load Error:", err.response?.data || err);
             }
         };
-        // console.log("Chats Received:", res.data);
 
         fetchChats();
     }, []);
@@ -55,7 +58,6 @@ const Inbox = () => {
                     </Link>
                 );
             })}
-            {/* <p> yo yo honey singh{chats}</p> */}
 
         </div>
     );

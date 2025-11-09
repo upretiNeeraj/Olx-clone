@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css"; // 👈 CSS module import
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -15,7 +17,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/login", formData);
+      const res = await axios.post(`${API_URL}/api/auth/login`, formData);
       localStorage.setItem("userInfo", JSON.stringify(res.data));
       setMessage("✅ Login successful!");
       setTimeout(() => navigate("/profile"), 1000);

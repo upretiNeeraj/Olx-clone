@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { io } from "socket.io-client";
+const API_URL = import.meta.env.VITE_API_URL;
 
-const socket = io("http://localhost:5001"); // socket connect
+
+
+
+const socket = io(`${API_URL}`); // socket connect
 
 const ChatRoom = () => {
     const { id } = useParams(); // chatId
@@ -14,7 +18,7 @@ const ChatRoom = () => {
     // ✅ Fetch previous messages when page opens
     useEffect(() => {
         const fetchMessages = async () => {
-            const res = await axios.get(`http://localhost:5001/api/messages/${id}`);
+            const res = await axios.get(`${API_URL}/api/messages/${id}`);
             setMessages(res.data);
         };
         fetchMessages();
@@ -37,7 +41,7 @@ const ChatRoom = () => {
 
         const newMsg = { chatId: id, sender: user._id, text };
 
-        await axios.post("http://localhost:5001/api/messages/send", newMsg); // save to db
+        await axios.post(`${API_URL}/api/messages/send`, newMsg); // save to db
         socket.emit("send_message", newMsg); // send realtime
 
         setText("");

@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
+
+
+
 
 const CreateAd = () => {
     const [formData, setFormData] = useState({
@@ -70,7 +74,7 @@ const CreateAd = () => {
         try {
             console.log([...data]);
 
-            await axios.post("http://localhost:5001/api/ads/create", data, {
+            await axios.post(`${API_URL}/api/ads/create`, data, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

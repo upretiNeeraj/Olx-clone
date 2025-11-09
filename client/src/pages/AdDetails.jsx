@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 const AdDetails = () => {
     const { id } = useParams();
@@ -12,14 +14,14 @@ const AdDetails = () => {
 
     useEffect(() => {
         const fetchAd = async () => {
-            const res = await axios.get(`http://localhost:5001/api/ads/${id}`);
+            const res = await axios.get(`${API_URL}/api/ads/${id}`);
             setAd(res.data);
         };
         fetchAd();
     }, [id]);
 
     const startChat = async (sellerId) => {
-        const res = await axios.post("http://localhost:5001/api/chat/start",
+        const res = await axios.post(`${API_URL}/api/chat/start`,
             { sellerId },
             { headers: { Authorization: `Bearer ${user.token}` } });
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 
 const AllAds = ({ searchQuery }) => {
@@ -13,7 +15,7 @@ const AllAds = ({ searchQuery }) => {
     useEffect(() => {
         const fetchAds = async () => {
             try {
-                const res = await axios.get("http://localhost:5001/api/ads");
+                const res = await axios.get(`${API_URL}/api/ads`);
                 setAds(res.data);
                 setFiltered(res.data);
             } catch (error) {

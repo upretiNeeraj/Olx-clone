@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Profile.module.css"; // 👈 CSS module import
+const API_URL = import.meta.env.VITE_API_URL;
+
+
 
 const Profile = () => {
     const [user, setUser] = useState(null);
@@ -13,7 +16,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await axios.get("http://localhost:5001/api/auth/profile", {
+                const res = await axios.get(`${API_URL}/api/auth/profile`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setUser(res.data);
@@ -32,7 +35,7 @@ const Profile = () => {
                 setAds(null); // Hide ads if already shown
                 return;
             }
-            const res = await axios.get("http://localhost:5001/api/ads/my", {
+            const res = await axios.get(`${API_URL}/api/ads/my`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setAds(res.data);

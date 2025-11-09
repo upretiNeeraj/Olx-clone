@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./Register.module.css"; // 👈 Import CSS module
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 const Register = () => {
     const [formData, setFormData] = useState({ name: "", email: "", password: "" });
@@ -15,7 +17,7 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:5001/api/auth/register", formData);
+            const res = await axios.post(`${API_URL}/api/auth/register`, formData);
             localStorage.setItem("userInfo", JSON.stringify(res.data));
             setMessage("🎉 Registration successful!");
             setTimeout(() => navigate("/login"), 1200);
