@@ -126,7 +126,8 @@
 }
 
 .adImage {
-    width: 100%;
+    margin: 20px;
+    width: 90%;
     height: 200px;
     object-fit: cover;
     border-bottom: 1px solid #f1f3f4;
@@ -144,6 +145,7 @@
 .adTitle {
     font-size: 1.1rem;
     font-weight: 600;
+    text-transform: capitalize;
     color: #2d3748;
     margin: 0 0 0.75rem 0;
     line-height: 1.4;
@@ -151,6 +153,7 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    line-clamp: 2;
 }
 
 .adPrice {
