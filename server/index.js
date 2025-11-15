@@ -41,7 +41,7 @@ connectDB();
 
 const app = express();
 app.use(cors({
-    origin: ["https://olx-clone-jade-nine.vercel.app"], // replace with your live Vercel URL
+    origin: "*", // replace with your live Vercel URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
@@ -58,7 +58,7 @@ app.get("/", (req, res) => {
 
 const port = process.env.PORT || 5001;
 
-/* ✅ Socket.io Setup */
+/*  Socket.io Setup */
 const http = require("http");
 const server = http.createServer(app);
 

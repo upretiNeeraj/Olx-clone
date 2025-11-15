@@ -1,80 +1,57 @@
+/* Login.module.css */
+
 .container {
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #007bff, #00c6ff);
-    font-family: "Poppins", sans-serif;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animated Background Elements */
+.container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: float 20s infinite linear;
+}
+
+@keyframes float {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50px, -50px) rotate(360deg);
+    }
 }
 
 .card {
-    background: #fff;
-    padding: 40px 35px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-    width: 350px;
-    text-align: center;
-    animation: fadeIn 0.5s ease-in-out;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+    z-index: 1;
+    animation: slideUp 0.6s ease-out;
 }
 
-.title {
-    font-size: 22px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-.form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.input {
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    outline: none;
-    font-size: 15px;
-    transition: border 0.3s ease;
-}
-
-.input:focus {
-    border-color: #007bff;
-}
-
-.button {
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.button:hover {
-    background: #0056b3;
-    transform: translateY(-2px);
-}
-
-.successMsg {
-    margin-top: 15px;
-    color: #28a745;
-    font-weight: 500;
-}
-
-.errorMsg {
-    margin-top: 15px;
-    color: #dc3545;
-    font-weight: 500;
-}
-
-@keyframes fadeIn {
+@keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateY(40px);
     }
 
     to {
@@ -83,10 +60,327 @@
     }
 }
 
-/* 📱 Responsive Design */
-@media (max-width: 500px) {
-    .card {
-        width: 90%;
-        padding: 30px 20px;
+.title {
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.inputGroup {
+    position: relative;
+}
+
+.input {
+    width: 100%;
+    padding: 1.2rem 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+    color: #2d3748;
+    font-family: inherit;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+.input:hover {
+    border-color: #cbd5e0;
+}
+
+/* Floating Labels */
+.input:focus+.floatingLabel,
+.input:not(:placeholder-shown)+.floatingLabel {
+    top: -10px;
+    left: 12px;
+    font-size: 0.8rem;
+    color: #667eea;
+    background: white;
+    padding: 0 8px;
+}
+
+.floatingLabel {
+    position: absolute;
+    top: 1.2rem;
+    left: 1.5rem;
+    font-size: 1rem;
+    color: #718096;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1.2rem 2rem;
+    border-radius: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.button:hover::before {
+    left: 100%;
+}
+
+.button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.button:active {
+    transform: translateY(-1px);
+}
+
+/* Message Styles */
+.successMsg,
+.errorMsg {
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    margin-top: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+    animation: messageSlide 0.3s ease-out;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
     }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.successMsg {
+    background: #f0fff4;
+    border: 1px solid #9ae6b4;
+    color: #2f855a;
+}
+
+.errorMsg {
+    background: #fed7d7;
+    border: 1px solid #feb2b2;
+    color: #c53030;
+}
+
+/* Additional Links */
+.additionalLinks {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.registerLink {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.registerLink:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Social Login */
+.socialLogin {
+    margin-top: 2rem;
+}
+
+.socialDivider {
+    text-align: center;
+    position: relative;
+    margin: 1.5rem 0;
+    color: #718096;
+}
+
+.socialDivider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.socialDivider span {
+    background: white;
+    padding: 0 1rem;
+    position: relative;
+}
+
+.socialButtons {
+    display: flex;
+    gap: 1rem;
+}
+
+.socialButton {
+    flex: 1;
+    padding: 0.8rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.socialButton:hover {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Password Toggle */
+.passwordToggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #718096;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.passwordToggle:hover {
+    color: #667eea;
+}
+
+/* Loading State */
+.buttonLoading {
+    position: relative;
+    color: transparent;
+}
+
+.buttonLoading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .card {
+        padding: 2rem 1.5rem;
+    }
+
+    .title {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+
+    .input {
+        padding: 1rem 1.2rem;
+    }
+
+    .button {
+        padding: 1.1rem 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        padding: 1.5rem 1.2rem;
+        border-radius: 20px;
+    }
+
+    .title {
+        font-size: 1.6rem;
+    }
+
+    .socialButtons {
+        flex-direction: column;
+    }
+}
+
+/* Decorative Elements */
+.decoration {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    animation: float 15s infinite ease-in-out;
+}
+
+.decoration:nth-child(1) {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.decoration:nth-child(2) {
+    bottom: 10%;
+    right: 10%;
+    animation-delay: -5s;
+    width: 150px;
+    height: 150px;
 }

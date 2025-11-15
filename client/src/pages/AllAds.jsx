@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import styles from "./AllAds.module.css";
+
 const API_URL = import.meta.env.VITE_API_URL;
-
-
 
 const AllAds = ({ searchQuery }) => {
     const [ads, setAds] = useState([]);
@@ -11,6 +11,7 @@ const AllAds = ({ searchQuery }) => {
     const [categoryFilter, setCategoryFilter] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
     const [sort, setSort] = useState("");
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchAds = async () => {
@@ -18,8 +19,10 @@ const AllAds = ({ searchQuery }) => {
                 const res = await axios.get(`${API_URL}/api/ads`);
                 setAds(res.data);
                 setFiltered(res.data);
+                setLoading(false);
             } catch (error) {
                 console.log(error);
+                setLoading(false);
             }
         };
         fetchAds();
@@ -50,66 +53,113 @@ const AllAds = ({ searchQuery }) => {
         setFiltered(result);
     }, [searchQuery, categoryFilter, maxPrice, sort, ads]);
 
-    return (
-        <div style={{ display: "flex" }}>
+    if (loading) {
+        return (
+            <div className={styles.container}>
+                <div className={styles.sidebar}>
+                    <h3>Filters</h3>
+                    <div className={styles.filterGroup}>
+                        <label>Category:</label>
+                        <select className={styles.filterSelect} disabled>
+                            <option>Loading...</option>
+                        </select>
+                    </div>
+                </div>
+                <div className={styles.mainContent}>
+                    <h2>All Listings</h2>
+                    <div className={styles.loadingGrid}>
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className={styles.loadingCard}></div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
-            {/* ✅ Sidebar */}
-            <div style={{ width: "220px", padding: "15px", borderRight: "1px solid #ddd" }}>
+    return (
+        <div className={styles.container}>
+            {/* Sidebar */}
+            <div className={styles.sidebar}>
                 <h3>Filters</h3>
 
-                <label>Category:</label><br />
-                <select onChange={(e) => setCategoryFilter(e.target.value)}>
-                    <option value="">All</option>
-                    <option value="Mobile">Mobile</option>
-                    <option value="Laptop">Laptop</option>
-                    <option value="Car">Car</option>
-                    <option value="Furniture">Furniture</option>
-                    <option value="Other">Other</option>
-                </select>
-
-                <br /><br />
-
-                <label>Max Price:</label><br />
-                <input type="number" onChange={(e) => setMaxPrice(e.target.value)} />
-
-                <br /><br />
-
-                <label>Sort:</label><br />
-                <select onChange={(e) => setSort(e.target.value)}>
-                    <option value="">None</option>
-                    <option value="low">Price: Low → High</option>
-                    <option value="high">Price: High → Low</option>
-                </select>
-            </div>
-
-            {/* ✅ Ads Section */}
-            <div style={{ padding: "20px", flex: 1 }}>
-                <h2>All Listings</h2>
-
-                <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-                    gap: "15px",
-                    marginTop: "20px"
-                }}>
-                    {filtered.map((ad) => (
-                        <Link to={`/ad/${ad._id}`} key={ad._id} style={{ textDecoration: "none", color: "inherit" }}>
-                            <div style={{ border: "1px solid #ccc", borderRadius: "8px", padding: "10px" }}>
-                                <img src={ad.image} loading="lazy" style={{ width: "100%", height: 170, objectFit: "cover" }} alt="AD image" />
-                                <h3>{ad.title}</h3>
-                                <h4>₹ {ad.price}</h4>
-                                <p>📍 {ad.location}</p>
-                            </div>
-                        </Link>
-                    ))}
-
+                <div className={styles.filterGroup}>
+                    <label>Category:</label>
+                    <select
+                        className={styles.filterSelect}
+                        onChange={(e) => setCategoryFilter(e.target.value)}
+                        value={categoryFilter}
+                    >
+                        <option value="">All Categories</option>
+                        <option value="Mobile">Mobile</option>
+                        <option value="Laptop">Laptop</option>
+                        <option value="Car">Car</option>
+                        <option value="Furniture">Furniture</option>
+                        <option value="Other">Other</option>
+                    </select>
                 </div>
 
+                <div className={styles.filterGroup}>
+                    <label>Max Price:</label>
+                    <input
+                        type="number"
+                        className={styles.filterInput}
+                        placeholder="Enter max price"
+                        onChange={(e) => setMaxPrice(e.target.value)}
+                        value={maxPrice}
+                    />
+                </div>
+
+                <div className={styles.filterGroup}>
+                    <label>Sort By:</label>
+                    <select
+                        className={styles.filterSelect}
+                        onChange={(e) => setSort(e.target.value)}
+                        value={sort}
+                    >
+                        <option value="">Recommended</option>
+                        <option value="low">Price: Low → High</option>
+                        <option value="high">Price: High → Low</option>
+                    </select>
+                </div>
+            </div>
+
+            {/* Main Content */}
+            <div className={styles.mainContent}>
+                <div className={styles.header}>
+                    <h2>All Listings</h2>
+                    <div className={styles.resultsCount}>
+                        {filtered.length} {filtered.length === 1 ? 'item' : 'items'} found
+                    </div>
+                </div>
+
+                <div className={styles.adsGrid}>
+                    {filtered.length > 0 ? (
+                        filtered.map((ad) => (
+                            <Link to={`/ad/${ad._id}`} key={ad._id} className={styles.adCard}>
+                                <img
+                                    src={ad.image}
+                                    loading="lazy"
+                                    className={styles.adImage}
+                                    alt={ad.title}
+                                />
+                                <div className={styles.adContent}>
+                                    <h3 className={styles.adTitle}>{ad.title}</h3>
+                                    <h4 className={styles.adPrice}>₹ {ad.price.toLocaleString()}</h4>
+                                    <p className={styles.adLocation}>{ad.location}</p>
+                                </div>
+                            </Link>
+                        ))
+                    ) : (
+                        <div className={styles.emptyState}>
+                            <h3>No listings found</h3>
+                            <p>Try adjusting your filters or search terms</p>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );
 };
 
 export default AllAds;
-
-

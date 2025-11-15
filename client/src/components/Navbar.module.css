@@ -1,160 +1,195 @@
-/* .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 30px;
-    background: #007bff;
-    color: white;
-    font-family: "Poppins", sans-serif;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.logo {
-    font-size: 22px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.logo:hover {
-    transform: scale(1.05);
-}
-
-.links {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
-
-.link {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.link:hover {
-    color: #ffeb3b;
-}
-
-.welcome {
-    background: rgba(255, 255, 255, 0.15);
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 14px;
-}
-
-.logoutBtn {
-    background: #ff4b5c;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 6px 12px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    font-weight: 500;
-}
-
-.logoutBtn:hover {
-    background: #e63946;
-}
-
-@media (max-width: 700px) {
-    .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .links {
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .logo {
-        font-size: 20px;
-    }
-} */
-
+/* Navbar.module.css */
 
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 25px;
-    background: #fff;
-    border-bottom: 1px solid #ddd;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .logo {
-    font-weight: 700;
-    font-size: 20px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
     cursor: pointer;
-    color: #007bff;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
 }
 
 .links {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 1.5rem;
 }
 
 .link {
     text-decoration: none;
-    color: #333;
+    color: white;
     font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
     position: relative;
-    padding-bottom: 4px;
-    transition: color 0.3s ease-in-out;
+    overflow: hidden;
 }
 
-/* Hover effect */
-.link::after {
-    content: "";
+.link::before {
+    content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0%;
-    height: 2px;
-    background-color: #007bff;
-    transition: width 0.3s ease-in-out;
-}
-
-.link:hover::after {
+    top: 0;
+    left: -100%;
     width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
 }
 
-/* ✅ Active route styling */
+.link:hover::before {
+    left: 100%;
+}
+
+.link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
 .active {
-    color: #007bff;
-    font-weight: 600;
-}
-
-.active::after {
-    width: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .welcome {
-    color: #555;
-    font-size: 14px;
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .logoutBtn {
-    padding: 5px 12px;
-    border: none;
-    border-radius: 6px;
-    background-color: #ff5252;
+    background: rgba(255, 255, 255, 0.1);
     color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
     cursor: pointer;
-    transition: 0.2s;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
 }
 
 .logoutBtn:hover {
-    background-color: #e63946;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Search input styles */
+.links input {
+    padding: 0.6rem 1rem;
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 0.9rem;
+    width: 220px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.links input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.links input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+    width: 250px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .links input {
+        width: 180px;
+    }
+
+    .links input:focus {
+        width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0.8rem;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .links {
+        gap: 0.8rem;
+    }
+
+    .link,
+    .logoutBtn,
+    .welcome {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .links input {
+        width: 150px;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .links input:focus {
+        width: 170px;
+    }
+}
+
+/* Animation for navbar entrance */
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.navbar {
+    animation: slideDown 0.5s ease-out;
 }
