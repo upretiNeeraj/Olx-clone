@@ -22,16 +22,16 @@ router.post("/create", protect, upload.single("image"), async (req, res) => {
             return res.status(400).json({ message: "Image is required" });
         }
 
-        // ✅ Step 1: Upload to Cloudinary
+        //  Step 1: Upload to Cloudinary
         const uploadResponse = await fileUploaderOnClouinary(req.file.path);
         if (!uploadResponse) {
             return res.status(500).json({ message: "Failed to upload image to Cloudinary" });
         }
 
-        // ✅ Step 2: Get Cloudinary URL
+        //  Step 2: Get Cloudinary URL
         const imageUrl = uploadResponse.secure_url;
 
-        // ✅ Step 3: (Optional) Delete local temp file
+        //  Step 3: (Optional) Delete local temp file
         fs.unlinkSync(req.file.path);
 
 
@@ -80,6 +80,31 @@ router.get("/:id", async (req, res) => {
         res.json(ad);
     } catch (err) {
         res.status(500).json({ message: err.message });
+    }
+});
+// DELETE Ad
+router.delete("/delete/:id", protect, async (req, res) => {
+    try {
+        const ad = await Ad.findById(req.params.id);
+
+        if (!ad) {
+            return res.status(404).json({ message: "Ad not found" });
+        }
+
+        // Check User Ownership
+        if (ad.user.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: "Unauthorized: Not your ad" });
+        }
+
+        // OPTIONAL: Delete image from Cloudinary if needed
+        cloudinary.uploader.destroy(ad.imagePublicId);
+
+        await ad.deleteOne();
+
+        res.json({ message: "Ad deleted successfully" });
+    } catch (err) {
+        console.error("Delete Error:", err);
+        res.status(500).json({ message: "Server error while deleting ad" });
     }
 });
 

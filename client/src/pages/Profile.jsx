@@ -62,6 +62,22 @@ const Profile = () => {
             </div>
         );
     }
+    const handleDelete = async (id) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this ad?");
+        if (!confirmDelete) return;
+        try {
+            await axios.delete(`${API_URL}/api/ads/delete/${id}`, {
+                header: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            setAds((prevAds) => prevAds.filter((ad) => ad._id !== id));
+            alert("Ad successfully deleted! ✅");
+        } catch (error) {
+            console.log("Delete error:", error);
+            alert("Failed to delete ad ❌");
+        }
+    }
 
     return (
         <div className={styles.container}>
@@ -105,6 +121,7 @@ const Profile = () => {
                                     <p className={styles.adPrice}>💰 ₹{item.price.toLocaleString()}</p>
                                     <p className={styles.adDesc}>{item.description}</p>
                                 </div>
+                                <button onClick={() => handleDelete(item._id)}> Remove add</button>
                             </div>
                         ))}
                     </div>
@@ -112,7 +129,7 @@ const Profile = () => {
                     <p className={styles.noAds}>You haven't posted any ads yet. Start selling today! 🎯</p>
                 )
             ) : null}
-        </div>
+        </div >
     );
 };
 

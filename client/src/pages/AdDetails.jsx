@@ -183,10 +183,6 @@ const AdDetails = () => {
                         >
                             💬 Chat with Seller
                         </button>
-
-                        <button className={styles.wishlistButton}>
-                            ❤️ Save to Wishlist
-                        </button>
                     </div>
                 </div>
             </div>

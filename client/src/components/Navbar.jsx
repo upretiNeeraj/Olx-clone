@@ -21,7 +21,7 @@ const Navbar = ({ setSearchQuery }) => {
         <nav className={styles.navbar}>
             {/* ✅ Logo */}
             <div className={styles.logo} onClick={() => navigate("/")}>
-                🛒 MyMarket
+                MyMarket
             </div>
 
             {/* ✅ Navigation Links */}
