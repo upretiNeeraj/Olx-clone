@@ -3,3 +3,11 @@
     margin: 0;
     box-sizing: border-box;
 }
+
+img {
+    display: block;
+}
+
+.adsGrid {
+    contain: layout;
+}

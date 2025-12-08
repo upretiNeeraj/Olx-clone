@@ -36,6 +36,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const sitemapRoute = require("./routes/sitemap.routes.js");
+const compression = require("compression");
 
 
 dotenv.config();
@@ -48,6 +49,12 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+app.use(compression());
+app.use("/api/ads", (req, res, next) => {
+    res.set("Cache-Control", "public, max-age=60");
+    next();
+});
+
 app.use("/", sitemapRoute);
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/ads", require("./routes/ad.routes"));
@@ -68,8 +75,12 @@ const { Server } = require("socket.io");
 const io = new Server(server, {
     cors: {
         origin: "https://olx-clone-jade-nine.vercel.app",
-        methods: ["GET", "POST"]
-    }
+        methods: ["GET", "POST"],
+        credentials: true,
+        transports: ["websocket"]
+    },
+    transports: ["websocket"],       // 🔥 Polling disabled
+    allowEIO3: true
 });
 
 

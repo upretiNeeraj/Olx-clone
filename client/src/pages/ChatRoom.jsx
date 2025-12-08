@@ -5,7 +5,9 @@ import { io } from "socket.io-client";
 import styles from "./ChatRoom.module.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
-const socket = io(`${API_URL}`);
+const socket = io(`${API_URL}`, {
+    transports: ["websocket"],
+});
 
 const ChatRoom = () => {
     const { id } = useParams();
@@ -36,9 +38,9 @@ const ChatRoom = () => {
                         headers: { Authorization: `Bearer ${user.token}` }
                     })
                 ]);
-                
+
                 setMessages(messagesRes.data);
-                
+
                 // Find other user in chat
                 const other = chatRes.data.users.find(u => u._id !== user._id);
                 setOtherUser(other);
@@ -72,9 +74,9 @@ const ChatRoom = () => {
     const sendMessage = async () => {
         if (!text.trim()) return;
 
-        const newMsg = { 
-            chatId: id, 
-            sender: user._id, 
+        const newMsg = {
+            chatId: id,
+            sender: user._id,
             text: text.trim(),
             timestamp: new Date()
         };
@@ -98,10 +100,10 @@ const ChatRoom = () => {
     const formatTime = (timestamp) => {
         if (!timestamp) return "";
         const date = new Date(timestamp);
-        return date.toLocaleTimeString('en-US', { 
-            hour: '2-digit', 
+        return date.toLocaleTimeString('en-US', {
+            hour: '2-digit',
             minute: '2-digit',
-            hour12: true 
+            hour12: true
         });
     };
 
@@ -114,19 +116,19 @@ const ChatRoom = () => {
             {/* Connection Status */}
             <div className={`${styles.connectionStatus} ${styles[connectionStatus]}`}>
                 <div className={styles.statusDot}></div>
-                {connectionStatus === "connected" ? "Connected" : 
-                 connectionStatus === "connecting" ? "Connecting..." : "Disconnected"}
+                {connectionStatus === "connected" ? "Connected" :
+                    connectionStatus === "connecting" ? "Connecting..." : "Disconnected"}
             </div>
 
             {/* Chat Header */}
             <div className={styles.chatHeader}>
-                <button 
+                <button
                     className={styles.backButton}
                     onClick={() => navigate(-1)}
                 >
                     ←
                 </button>
-                
+
                 {otherUser && (
                     <>
                         <div className={styles.userAvatar}>
@@ -152,9 +154,8 @@ const ChatRoom = () => {
                     messages.map((msg, index) => (
                         <div
                             key={index}
-                            className={`${styles.message} ${
-                                msg.sender === user._id ? styles.myMessage : styles.otherMessage
-                            }`}
+                            className={`${styles.message} ${msg.sender === user._id ? styles.myMessage : styles.otherMessage
+                                }`}
                         >
                             <div>{msg.text}</div>
                             <div className={styles.messageTime}>
@@ -178,7 +179,7 @@ const ChatRoom = () => {
                         placeholder="Type your message..."
                     />
                 </div>
-                <button 
+                <button
                     className={styles.sendButton}
                     onClick={sendMessage}
                     disabled={!text.trim()}

@@ -142,7 +142,10 @@ const AllAds = ({ searchQuery }) => {
                         filtered.map((ad) => (
                             <Link to={`/ad/${ad._id}`} key={ad._id} className={styles.adCard}>
                                 <img
-                                    src={ad.image}
+                                    src={ad.image.replace(
+                                        "/upload/",
+                                        "/upload/f_webp,q_auto:eco,w_300,h_200,c_fill/"
+                                    )}
                                     loading="lazy"
                                     className={styles.adImage}
                                     alt={ad.title}
