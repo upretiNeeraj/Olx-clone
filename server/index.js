@@ -35,6 +35,8 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const sitemapRoute = require("./routes/sitemap.routes.js");
+
 
 dotenv.config();
 connectDB();
@@ -46,7 +48,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
-
+app.use("/", sitemapRoute);
 app.use("/api/auth", require("./routes/auth.routes"));
 app.use("/api/ads", require("./routes/ad.routes"));
 app.use("/api/chat", require("./routes/chat.routes"));
@@ -65,7 +67,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
     cors: {
-        origin: "https://olx-clone-jade-nine.vercel.app",
+        origin: ["https://olx-clone-jade-nine.vercel.app",],
         methods: ["GET", "POST"]
     }
 });

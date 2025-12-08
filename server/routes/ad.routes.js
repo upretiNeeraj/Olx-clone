@@ -19,16 +19,19 @@ router.post("/create", protect, upload.single("image"), async (req, res) => {
             return res.status(400).json({ message: "Image is required" });
         }
 
-        // Upload to Cloudinary
-        const uploadResponse = await fileUploaderOnClouinary(req.file.path);
-        if (!uploadResponse) {
-            return res.status(500).json({ message: "Failed to upload image to Cloudinary" });
-        }
+        // Upload to Cloudinary using buffer
+        const uploadResult = await new Promise((resolve, reject) => {
+            const stream = fileUploaderOnClouinary.uploader.upload_stream(
+                { folder: "ads" },
+                (error, result) => {
+                    if (error) reject(error);
+                    else resolve(result);
+                }
+            );
+            stream.end(req.file.buffer);
+        });
 
-        const imageUrl = uploadResponse.secure_url;
-
-        // Delete temp file
-        fs.unlinkSync(req.file.path);
+        const imageUrl = uploadResult.secure_url;
 
         const parsedLocation = location ? JSON.parse(location) : null;
 
@@ -48,6 +51,7 @@ router.post("/create", protect, upload.single("image"), async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+
 
 // All Ads
 router.get("/", async (req, res) => {

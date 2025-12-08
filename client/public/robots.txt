@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Don’t index search result pages
+Disallow: /search
+Disallow: /filter
+Disallow: /admin
+Disallow: /dashboard
+
+# Sitemap location
+Sitemap: https://your-domain.com/sitemap.xml

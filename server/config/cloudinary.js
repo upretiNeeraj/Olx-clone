@@ -13,7 +13,7 @@ const fileUploaderOnClouinary = async (filePath) => {
         const response = await cloudinary.uploader.upload(filePath, {
             resource_type: "auto",
             transformation: [
-                { width: 1200, height: 1200, crop: "limit" },
+                { width: 300, height: 300, crop: "limit" },
                 { fetch_format: "webp" }]
         });
         console.log("response =>", response);
