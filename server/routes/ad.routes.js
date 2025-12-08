@@ -11,36 +11,36 @@ router.post("/create", protect, upload.single("image"), async (req, res) => {
     try {
         const { title, description, price, location, category } = req.body;
 
-        if (!title || !category) {
-            return res.status(400).json({ message: "Title and category are required" });
-        }
-
         if (!req.file) {
             return res.status(400).json({ message: "Image is required" });
         }
 
-        // Upload to Cloudinary using buffer
+        // Cloudinary upload using buffer
         const uploadResult = await new Promise((resolve, reject) => {
-            const stream = fileUploaderOnClouinary.uploader.upload_stream(
-                { folder: "ads" },
-                (error, result) => {
-                    if (error) reject(error);
+            const stream = cloudinary.uploader.upload_stream(
+                {
+                    folder: "ads",
+                    resource_type: "auto",
+                    transformation: [
+                        { width: 300, height: 300, crop: "limit" },
+                        { fetch_format: "webp" },
+                    ],
+                },
+                (err, result) => {
+                    if (err) reject(err);
                     else resolve(result);
                 }
             );
+
             stream.end(req.file.buffer);
         });
-
-        const imageUrl = uploadResult.secure_url;
-
-        const parsedLocation = location ? JSON.parse(location) : null;
 
         const ad = await Ad.create({
             title,
             description,
             price: Number(price),
-            image: imageUrl,
-            location: parsedLocation,
+            image: uploadResult.secure_url,
+            location: location ? JSON.parse(location) : null,
             user: req.user._id,
             category,
         });
