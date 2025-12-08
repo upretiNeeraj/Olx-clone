@@ -3,8 +3,10 @@ const protect = require("../middleware/authMiddleware");
 const Ad = require("../models/ad.model");
 const upload = require("../middleware/upload");
 const router = express.Router();
-const fileUploaderOnClouinary = require("../config/cloudinary");
-const fs = require("fs");
+// const fileUploaderOnClouinary = require("../config/cloudinary");
+// const fs = require("fs");
+const cloudinary = require("../config/cloudinary");
+
 
 // CREATE AD
 router.post("/create", protect, upload.single("image"), async (req, res) => {
