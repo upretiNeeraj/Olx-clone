@@ -1,36 +1,3 @@
-// const express = require("express");
-// const cors = require("cors");
-// const dotenv = require("dotenv");
-// const connectDB = require("./config/db");
-
-
-// dotenv.config()
-
-// connectDB();
-
-// const app = express();
-
-// app.use(cors());
-
-// app.use(express.json());
-// app.use("/api/auth", require("./routes/auth.routes"));
-
-
-// app.use("/api/ads", require("./routes/ad.routes"));
-// app.use("/api/chat", require("./routes/chat.routes"));
-
-
-// app.get("/", (req, res) => {
-//     res.send("api is working")
-// })
-
-// const port = process.env.PORT || 5001
-// app.listen(port, () => {
-//     console.log(`🚀 Server running on port ${process.env.PORT}`)
-// })
-
-
-
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -44,16 +11,12 @@ connectDB();
 
 const app = express();
 app.use(cors({
-    origin: "*", // replace with your live Vercel URL
+    origin: "https://olx-clone-jade-nine.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
 app.use(express.json());
 app.use(compression());
-// app.use("/api/ads", (req, res, next) => {
-//     res.set("Cache-Control", "public, max-age=60");
-//     next();
-// });
 
 app.use("/", sitemapRoute);
 app.use("/api/auth", require("./routes/auth.routes"));
@@ -67,7 +30,6 @@ app.get("/", (req, res) => {
 
 const port = process.env.PORT || 5001;
 
-/*  Socket.io Setup */
 const http = require("http");
 const server = http.createServer(app);
 
@@ -79,7 +41,7 @@ const io = new Server(server, {
         credentials: true,
         transports: ["websocket"]
     },
-    transports: ["websocket"],       // 🔥 Polling disabled
+    transports: ["websocket"],
     allowEIO3: true
 });
 

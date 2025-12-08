@@ -3,8 +3,6 @@ const protect = require("../middleware/authMiddleware");
 const Ad = require("../models/ad.model");
 const upload = require("../middleware/upload");
 const router = express.Router();
-// const fileUploaderOnClouinary = require("../config/cloudinary");
-// const fs = require("fs");
 const cloudinary = require("../config/cloudinary");
 
 
@@ -13,7 +11,6 @@ router.post("/create", protect, upload.single("image"), async (req, res) => {
     try {
         const { title, description, price, location, category } = req.body;
 
-        // Final FIX for manual location
         const parsedLocation = location || null;
 
         const uploadResult = await new Promise((resolve, reject) => {
@@ -52,7 +49,7 @@ router.post("/create", protect, upload.single("image"), async (req, res) => {
 });
 
 
-// All Ads
+
 router.get("/", async (req, res) => {
     try {
         const ads = await Ad.find().populate("user", "name email");
@@ -62,7 +59,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-// My Ads
 router.get("/my", protect, async (req, res) => {
     try {
         const ads = await Ad.find({ user: req.user._id });
@@ -72,7 +68,6 @@ router.get("/my", protect, async (req, res) => {
     }
 });
 
-// Get Single Ad
 router.get("/:id", async (req, res) => {
     try {
         const ad = await Ad.findById(req.params.id).populate("user", "name email");
@@ -82,7 +77,6 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// DELETE Ad (Fixed)
 router.delete("/delete/:id", protect, async (req, res) => {
     try {
         const ad = await Ad.findById(req.params.id);

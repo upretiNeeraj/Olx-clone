@@ -9,15 +9,13 @@ router.post("/start", protect, async (req, res) => {
 
         if (!sellerId) return res.status(400).json({ message: "Seller ID required" });
 
-        // ✅ Find existing chat
         let chat = await Chat.findOne({
             users: { $all: [req.user._id, sellerId] }
         });
 
-        // ✅ If not exists, create new
         if (!chat) {
             chat = await Chat.create({
-                users: [req.user._id, sellerId]  // ✅ MUST be array
+                users: [req.user._id, sellerId] 
             });
         }
 
