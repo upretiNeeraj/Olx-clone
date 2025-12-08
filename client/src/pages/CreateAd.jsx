@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import styles from "./CreateAd.module.css";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -17,6 +18,7 @@ const CreateAd = () => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: "", text: "" });
     const [fileName, setFileName] = useState("");
+    const navigate = useNavigate();
 
     const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
 
@@ -59,6 +61,7 @@ const CreateAd = () => {
             });
             setImage(null);
             setFileName("");
+            navigate("/")
         } catch (err) {
             setMessage({
                 type: "error",
@@ -155,7 +158,7 @@ const CreateAd = () => {
                     <input
                         type="text"
                         className={styles.input}
-                        placeholder="Enter your location manually (e.g., Kalanga, Dehradun)"
+                        placeholder="Enter your location (e.g., Kalanga, Dehradun)"
                         value={formData.location}
                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                         required
@@ -185,7 +188,7 @@ const CreateAd = () => {
                     disabled={loading}
                 >
                     {loading && <span className={styles.loading}></span>}
-                    {loading ? "Creating Ad..." : "🚀 Post Ad"}
+                    {loading ? "Creating Ad..." : " Post Ad"}
                 </button>
             </form>
         </div>
