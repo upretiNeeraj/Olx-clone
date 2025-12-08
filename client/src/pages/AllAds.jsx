@@ -142,8 +142,8 @@ const AllAds = ({ searchQuery }) => {
                                     loading="lazy"
                                     className={styles.adImage}
                                     alt={ad.title}
-                                    width="90%"
-                                    height="200px"
+                                    width="300"
+                                    height="200"
                                 />
                                 <div className={styles.adContent}>
                                     <h3 className={styles.adTitle}>{ad.title}</h3>
