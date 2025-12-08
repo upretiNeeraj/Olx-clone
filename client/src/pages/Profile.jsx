@@ -67,7 +67,7 @@ const Profile = () => {
         if (!confirmDelete) return;
         try {
             await axios.delete(`${API_URL}/api/ads/delete/${id}`, {
-                header: {
+                headers: {
                     Authorization: `Bearer ${token}`
                 }
             })

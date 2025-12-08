@@ -24,13 +24,13 @@ const Login = () => {
     try {
       const res = await axios.post(`${API_URL}/api/auth/login`, formData);
       localStorage.setItem("userInfo", JSON.stringify(res.data));
-      setMessage("✅ Login successful!");
+      setMessage(" Login successful!");
 
       setTimeout(() => {
         navigate("/profile");
       }, 1000);
     } catch (error) {
-      setMessage(error.response?.data?.message || "❌ Invalid credentials");
+      setMessage(error.response?.data?.message || " Invalid credentials");
     } finally {
       setLoading(false);
     }
@@ -42,7 +42,6 @@ const Login = () => {
 
   return (
     <div className={styles.container}>
-      {/* Decorative Elements */}
       <div className={styles.decoration}></div>
       <div className={styles.decoration}></div>
 
@@ -107,7 +106,6 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Social Login Section */}
         <div className={styles.socialLogin}>
           <div className={styles.socialDivider}>
             <span>Or continue with</span>

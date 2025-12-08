@@ -12,6 +12,7 @@ const fileUploaderOnClouinary = async (filePath) => {
         if (!filePath) return null;
         const response = await cloudinary.uploader.upload(filePath, {
             resource_type: "auto",
+            transformation: [{ fetch_format: "webp" }]
         });
         console.log("response =>", response);
         return response
