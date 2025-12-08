@@ -13,9 +13,8 @@ router.post("/create", protect, upload.single("image"), async (req, res) => {
     try {
         const { title, description, price, location, category } = req.body;
 
-        if (!req.file) {
-            return res.status(400).json({ message: "Image is required" });
-        }
+        // Final FIX for manual location
+        const parsedLocation = location || null;
 
         const uploadResult = await new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(
@@ -32,7 +31,6 @@ router.post("/create", protect, upload.single("image"), async (req, res) => {
                     else resolve(result);
                 }
             );
-
             stream.end(req.file.buffer);
         });
 
@@ -41,7 +39,7 @@ router.post("/create", protect, upload.single("image"), async (req, res) => {
             description,
             price: Number(price),
             image: uploadResult.secure_url,
-            location,
+            location: parsedLocation,
             user: req.user._id,
             category,
         });
