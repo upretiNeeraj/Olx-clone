@@ -146,7 +146,8 @@ const AllAds = ({ searchQuery }) => {
                                         "/upload/",
                                         "/upload/f_webp,q_auto:eco,w_300,h_200,c_fill/"
                                     )}
-                                    loading="lazy"
+                                    loading={i === 0 ? "eager" : "lazy"}   // 🔥 FIX
+                                    fetchpriority={i === 0 ? "high" : "auto"}   // 🔥 FIX
                                     className={styles.adImage}
                                     alt={ad.title}
                                     width="300"

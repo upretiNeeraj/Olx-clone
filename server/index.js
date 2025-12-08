@@ -50,10 +50,10 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(compression());
-app.use("/api/ads", (req, res, next) => {
-    res.set("Cache-Control", "public, max-age=60");
-    next();
-});
+// app.use("/api/ads", (req, res, next) => {
+//     res.set("Cache-Control", "public, max-age=60");
+//     next();
+// });
 
 app.use("/", sitemapRoute);
 app.use("/api/auth", require("./routes/auth.routes"));
@@ -62,7 +62,7 @@ app.use("/api/chat", require("./routes/chat.routes"));
 app.use("/api/messages", require("./routes/message.routes.js"));
 
 app.get("/", (req, res) => {
-    res.send("API Running ✅");
+    res.send("API Running ");
 });
 
 const port = process.env.PORT || 5001;
