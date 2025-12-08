@@ -79,6 +79,10 @@ const AllAds = ({ searchQuery }) => {
 
     return (
         <div className={styles.container}>
+            <title>MyMarket – Buy & Sell Anything</title>
+            <meta name="description" content="Browse all items including mobiles, laptops, cars, properties and more." />
+
+            <meta name="robots" content="index, follow" />
             {/* Sidebar */}
             <div className={styles.sidebar}>
                 <h3>Filters</h3>

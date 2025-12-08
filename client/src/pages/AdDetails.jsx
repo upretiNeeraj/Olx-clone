@@ -86,6 +86,16 @@ const AdDetails = () => {
 
     return (
         <div className={styles.container}>
+            <title>{ad.title} – ₹{ad.price}</title>
+
+            <meta name="description" content={`${ad.title} available in ${ad.location}. Price: ₹${ad.price}`} />
+            <meta name="robots" content="index, follow" />
+
+            {/* For Social Media (OG Tags) */}
+            <meta property="og:title" content={ad.title} />
+            <meta property="og:description" content={`Price: ₹${ad.price}`} />
+            <meta property="og:image" content={ad.image} />
+            <meta property="og:url" content={`https://your-domain.com/ad/${ad._id}`} />
             {/* Back Button */}
             <Link to="/" className={styles.backButton}>
                 ← Back to All Ads
@@ -168,9 +178,6 @@ const AdDetails = () => {
                             </div>
                             <div className={styles.sellerDetails}>
                                 <h4 className={styles.sellerName}>{ad.user?.name || "Unknown Seller"}</h4>
-                                <div className={styles.sellerRating}>
-                                    ⭐ 4.8 • 50+ reviews
-                                </div>
                             </div>
                         </div>
                     </div>
