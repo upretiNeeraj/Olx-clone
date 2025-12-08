@@ -88,8 +88,9 @@ const AllAds = ({ searchQuery }) => {
                 <h3>Filters</h3>
 
                 <div className={styles.filterGroup}>
-                    <label>Category:</label>
+                    <label htmlFor="category">Category:</label>
                     <select
+                        id="category"
                         className={styles.filterSelect}
                         onChange={(e) => setCategoryFilter(e.target.value)}
                         value={categoryFilter}
@@ -103,6 +104,7 @@ const AllAds = ({ searchQuery }) => {
                     </select>
                 </div>
 
+
                 <div className={styles.filterGroup}>
                     <label>Max Price:</label>
                     <input
@@ -115,8 +117,9 @@ const AllAds = ({ searchQuery }) => {
                 </div>
 
                 <div className={styles.filterGroup}>
-                    <label>Sort By:</label>
+                    <label htmlFor="recommended">Sort By:</label>
                     <select
+                        id="recommended"
                         className={styles.filterSelect}
                         onChange={(e) => setSort(e.target.value)}
                         value={sort}
