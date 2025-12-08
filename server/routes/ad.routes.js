@@ -17,7 +17,6 @@ router.post("/create", protect, upload.single("image"), async (req, res) => {
             return res.status(400).json({ message: "Image is required" });
         }
 
-        // Cloudinary upload using buffer
         const uploadResult = await new Promise((resolve, reject) => {
             const stream = cloudinary.uploader.upload_stream(
                 {
@@ -42,7 +41,7 @@ router.post("/create", protect, upload.single("image"), async (req, res) => {
             description,
             price: Number(price),
             image: uploadResult.secure_url,
-            location: location ? JSON.parse(location) : null,
+            location,
             user: req.user._id,
             category,
         });

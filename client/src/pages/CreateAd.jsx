@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import styles from "./CreateAd.module.css";
 
@@ -14,72 +14,18 @@ const CreateAd = () => {
     });
 
     const [image, setImage] = useState(null);
-    const [location, setLocation] = useState({ lat: "", lon: "" });
-    const [locationName, setLocationName] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: "", text: "" });
     const [fileName, setFileName] = useState("");
 
     const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
 
-    useEffect(() => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    setLocation({
-                        lat: pos.coords.latitude,
-                        lon: pos.coords.longitude,
-                    });
-                },
-                () => {
-                    console.log("Location permission blocked");
-                    setMessage({
-                        type: "error",
-                        text: "Location access denied. Please enable location services for better experience."
-                    });
-                }
-            );
-        }
-    }, []);
-
-    useEffect(() => {
-        if (location.lat && location.lon) {
-            setLocationName("Detecting your location...");
-            fetch(`https://nominatim.openstreetmap.org/reverse?lat=${location.lat}&lon=${location.lon}&format=json`)
-                .then(res => res.json())
-                .then(data => {
-                    const detectedLocation =
-                        data.address.city ||
-                        data.address.town ||
-                        data.address.village ||
-                        data.address.locality ||
-                        data.address.suburb ||
-                        data.address.county ||
-                        data.address.state ||
-                        data.address.region ||
-                        data.display_name?.split(",")[0] ||
-                        "Unknown Location";
-
-                    setLocationName(detectedLocation);
-                    setFormData(prev => ({ ...prev, location: detectedLocation }));
-                })
-                .catch(() => {
-                    setLocationName("Location detection failed");
-                    setMessage({
-                        type: "error",
-                        text: "Could not detect location name. Please enter manually."
-                    });
-                });
-        }
-    }, [location]);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setMessage({ type: "", text: "" });
 
-        // Validation
-        if (!formData.title || !formData.description || !formData.price || !formData.category || !image) {
+        if (!formData.title || !formData.description || !formData.price || !formData.category || !formData.location || !image) {
             setMessage({ type: "error", text: "Please fill all fields and select an image" });
             setLoading(false);
             return;
@@ -89,7 +35,7 @@ const CreateAd = () => {
         data.append("title", formData.title);
         data.append("description", formData.description);
         data.append("price", formData.price);
-        data.append("location", locationName || "Unknown Location");
+        data.append("location", formData.location); // MANUAL LOCATION ONLY
         data.append("image", image);
         data.append("category", formData.category);
 
@@ -102,6 +48,7 @@ const CreateAd = () => {
             });
 
             setMessage({ type: "success", text: "✅ Ad created successfully!" });
+
             // Reset form
             setFormData({
                 title: "",
@@ -141,6 +88,8 @@ const CreateAd = () => {
             )}
 
             <form onSubmit={handleSubmit} className={styles.form}>
+
+                {/* Title */}
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Title</label>
                     <input
@@ -153,17 +102,19 @@ const CreateAd = () => {
                     />
                 </div>
 
+                {/* Description */}
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Description</label>
                     <textarea
                         className={styles.textarea}
-                        placeholder="Describe your item in detail"
+                        placeholder="Describe your item"
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                         required
                     />
                 </div>
 
+                {/* Category */}
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Category</label>
                     <select
@@ -181,6 +132,7 @@ const CreateAd = () => {
                     </select>
                 </div>
 
+                {/* Price */}
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Price (₹)</label>
                     <div className={styles.priceContainer}>
@@ -197,16 +149,20 @@ const CreateAd = () => {
                     </div>
                 </div>
 
+                {/* Manual Location */}
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Location</label>
-                    <div className={styles.locationDisplay}>
-                        <span className={styles.locationIcon}>📍</span>
-                        <span className={styles.locationText}>
-                            {locationName || "Detecting your location..."}
-                        </span>
-                    </div>
+                    <input
+                        type="text"
+                        className={styles.input}
+                        placeholder="Enter your location manually (e.g., Kalanga, Dehradun)"
+                        value={formData.location}
+                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                        required
+                    />
                 </div>
 
+                {/* Image Upload */}
                 <div className={styles.formGroup}>
                     <label className={styles.label}>Product Image</label>
                     <input
