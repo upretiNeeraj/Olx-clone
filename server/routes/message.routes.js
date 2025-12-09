@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Message = require("../models/message.model");
-const Chat = require("../models/chat.model");          // 🔥 MISSING IMPORT FIXED
+const Chat = require("../models/chat.model");
 const protect = require("../middleware/authMiddleware");
 
 
