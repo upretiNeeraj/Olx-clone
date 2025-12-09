@@ -1,14 +1,18 @@
 const express = require("express");
 const Message = require("../models/message.model");
-const router = express.Router();
+const Chat = require("../models/chat.model");
 const protect = require("../middleware/authMiddleware");
 
+const router = express.Router();
 
-router.get("/:chatId", async (req, res) => {
+// 📌 Get messages of specific chat
+router.get("/:chatId", protect, async (req, res) => {
     const msgs = await Message.find({ chat: req.params.chatId });
     res.json(msgs);
 });
 
+
+// 📌 Send Message
 router.post("/send", protect, async (req, res) => {
     try {
         const msg = await Message.create({
@@ -17,7 +21,7 @@ router.post("/send", protect, async (req, res) => {
             text: req.body.text,
         });
 
-        // 🔥 Update lastMessage for inbox preview
+        // 🔥 Update lastMessage to show in Inbox preview
         await Chat.findByIdAndUpdate(req.body.chatId, {
             lastMessage: {
                 text: req.body.text,
@@ -28,10 +32,10 @@ router.post("/send", protect, async (req, res) => {
         });
 
         res.json(msg);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 });
-
 
 module.exports = router;
