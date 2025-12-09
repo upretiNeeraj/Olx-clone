@@ -76,10 +76,12 @@ const Register = () => {
         const result = registerSchema.safeParse(formData);
 
         if (!result.success) {
-            setMessage("❌ " + result.error.errors[0].message);
+            const msg = result.error?.errors?.[0]?.message || "Invalid input data";
+            setMessage("❌ " + msg);
             setLoading(false);
             return;
         }
+
 
         if (!acceptedTerms) {
             setMessage("❌ Please accept Terms & Conditions");
