@@ -64,20 +64,27 @@ const ChatRoom = () => {
     // Send msg
     const sendMessage = async () => {
         if (!text.trim()) return;
+
         const msg = {
             chatId: id,
             sender: user?._id,
             text: text.trim(),
             timestamp: new Date()
         };
+
         try {
-            await axios.post(`${API_URL}/api/messages/send`, msg);
+            await axios.post(`${API_URL}/api/messages/send`, msg, {
+                headers: { Authorization: `Bearer ${user.token}` }
+            });
+
             socket.emit("send_message", msg);
             setText("");
+
         } catch (err) {
-            console.error("Send Error →", err);
+            console.error("Send Error →", err.response?.data || err.message);
         }
     };
+
 
     // Enter to Send
     const handleKey = e => {
