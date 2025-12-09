@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../models/user.model");
 const generateToken = require("../utils/generateToken");
 const router = express.Router();
+const authLimiter = require("../middleware/rateLimitMiddleware")
 
 router.post("/register", async (req, res) => {
     try {
@@ -17,7 +18,7 @@ router.post("/register", async (req, res) => {
     }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", authLimiter, async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });

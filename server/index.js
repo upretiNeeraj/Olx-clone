@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const sitemapRoute = require("./routes/sitemap.routes.js");
 const compression = require("compression");
+// const authLimiter = require("./middleware/rateLimitMiddleware.js")
 
 
 dotenv.config();

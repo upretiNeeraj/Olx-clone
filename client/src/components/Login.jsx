@@ -10,6 +10,7 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [failedCount, setFailedCount] = useState(3)
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -30,8 +31,29 @@ const Login = () => {
         navigate("/profile");
       }, 1000);
     } catch (error) {
-      setMessage(error.response?.data?.message || " Invalid credentials");
-    } finally {
+
+      setFailedCount(prev => {
+        const updated = prev - 1;
+
+        if (updated <= 0) {
+          setMessage("⛔ Too many attempts! Try again after 15 min.");
+
+          // Optional frontend cooldown reset
+          setTimeout(() => setFailedCount(3), 15 * 60 * 1000);
+
+          return 0;
+        }
+
+        setMessage(
+          error.response?.data?.message ||
+          `❌ Invalid credentials — attempts left: ${updated}`
+        );
+
+        return updated;
+      });
+
+    }
+    finally {
       setLoading(false);
     }
   };
