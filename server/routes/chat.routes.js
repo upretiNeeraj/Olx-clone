@@ -24,17 +24,17 @@ router.post("/start", protect, async (req, res) => {
 
 
 // 📌 Get logged in user's chats (for Inbox)
-router.get("/my", protect, async (req, res) => {
-    try {
-        const chats = await Chat.find({ users: req.user._id })
-            .populate("users", "name email")
-            .sort({ updatedAt: -1 }); // latest first
+// router.get("/my", protect, async (req, res) => {
+//     try {
+//         const chats = await Chat.find({ users: req.user._id })
+//             .populate("users", "name email")
+//             .sort({ updatedAt: -1 }); // latest first
 
-        res.json(chats);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
+//         res.json(chats);
+//     } catch (err) {
+//         res.status(500).json({ message: err.message });
+//     }
+// });
 
 
 // 🔥 MISSING ROUTE — now added
@@ -46,6 +46,17 @@ router.get("/:id", protect, async (req, res) => {
         if (!chat) return res.status(404).json({ message: "Chat not found" });
 
         res.json(chat);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+router.get("/my", protect, async (req, res) => {
+    try {
+        const chats = await Chat.find({ users: req.user._id })
+            .populate("users", "name email")
+            .sort({ updatedAt: -1 }); // latest first
+
+        res.json(chats);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
