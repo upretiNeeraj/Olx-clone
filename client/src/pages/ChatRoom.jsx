@@ -8,7 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL, { transports: ["websocket"] });
 
 export default function ChatRoom() {
-    const { id } = useParams();
+    const { id } = useParams();   // current chatId
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("userInfo"));
 
@@ -22,9 +22,9 @@ export default function ChatRoom() {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    // 🟢 Load chat + messages
+    // 🟢 Load Previous Messages + Chat Users
     useEffect(() => {
-        const load = async () => {
+        const loadChat = async () => {
             try {
                 const msgRes = await axios.get(`${API_URL}/api/messages/${id}`, {
                     headers: { Authorization: `Bearer ${user.token}` }
@@ -36,21 +36,30 @@ export default function ChatRoom() {
 
                 setMessages(msgRes.data);
                 setOtherUser(chatRes.data.users.find(u => u._id !== user._id));
-            } catch (e) {
-                console.log("Chat Load Error →", e.response?.data || e);
+
+            } catch (err) {
+                console.log("Chat Load Error →", err.response?.data || err);
             }
         };
-        load();
+        loadChat();
     }, [id]);
 
-    // 🔥 Live receive from other user
+
+    // 🟢 Real-Time Receive (with chatId filter) 🔥
     useEffect(() => {
         socket.emit("join_chat", id);
-        socket.on("receive_message", msg => setMessages(p => [...p, msg]));
+
+        socket.on("receive_message", (msg) => {
+            if (msg.chatId === id) {               // <-- Yahi missing tha!
+                setMessages(prev => [...prev, msg]);
+            }
+        });
+
         return () => socket.off("receive_message");
     }, [id]);
 
-    // 🔥 Send message
+
+    // 🟢 Send Message
     const sendMessage = async () => {
         if (!text.trim()) return;
 
@@ -61,18 +70,21 @@ export default function ChatRoom() {
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );
 
-            setMessages(prev => [...prev, data]); // show instantly
-            socket.emit("send_message", data);    // realtime live
-            setText("");                           // clear input
-        } catch (e) {
-            console.log("Send Error:", e.response?.data || e);
+            setMessages(prev => [...prev, data]);   // show without refresh
+            socket.emit("send_message", data);      // live update to other user
+            setText("");                            // clear input
+
+        } catch (err) {
+            console.log("Send Error:", err.response?.data || err);
         }
     };
 
+
     return (
         <div className={styles.container}>
-            <button className={styles.backButton} onClick={() => navigate(-1)}>←</button>
-            <h2>Chat with {otherUser?.name || "Loading..."}</h2>
+            <button className={styles.backButton} onClick={() => navigate(-1)}>← Back</button>
+
+            <h2>{otherUser?.name || "Loading..."}</h2>
 
             <div className={styles.chatBox}>
                 {messages.map((m, i) => (
