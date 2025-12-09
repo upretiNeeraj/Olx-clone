@@ -9,13 +9,29 @@ router.get("/:chatId", async (req, res) => {
     res.json(msgs);
 });
 
-router.post("/send", async (req, res) => {
-    const msg = await Message.create({
-        chat: req.body.chatId,
-        sender: req.body.sender,
-        text: req.body.text,
-    });
-    res.json(msg);
+router.post("/send", protect, async (req, res) => {
+    try {
+        const msg = await Message.create({
+            chat: req.body.chatId,
+            sender: req.user._id,
+            text: req.body.text,
+        });
+
+        // 🔥 Update lastMessage for inbox preview
+        await Chat.findByIdAndUpdate(req.body.chatId, {
+            lastMessage: {
+                text: req.body.text,
+                sender: req.user._id,
+                timestamp: new Date()
+            },
+            updatedAt: new Date()
+        });
+
+        res.json(msg);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 });
+
 
 module.exports = router;
