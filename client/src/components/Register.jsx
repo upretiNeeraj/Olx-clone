@@ -34,6 +34,9 @@ const Register = () => {
         if (/[a-z]/.test(password) && /[A-Z]/.test(password)) s++;
         if (/\d/.test(password)) s++;
         if (/[^a-zA-Z0-9]/.test(password)) s++;
+        console.log("password score = ", s);
+        console.log("class = ", ["", "weak", "medium", "strong", "very-strong"][s]);
+
         setPasswordStrength(["", "weak", "medium", "strong", "very-strong"][s]);
     };
 
