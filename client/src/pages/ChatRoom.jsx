@@ -50,17 +50,23 @@ export default function ChatRoom() {
     // Send Message ---------------------------------------
     const sendMessage = async () => {
         if (!text.trim()) return;
-        const msg = { chatId: id, text, timestamp: new Date() };
 
         try {
-            await axios.post(`${API_URL}/api/messages/send`, msg, {
-                headers: { Authorization: `Bearer ${user.token}` }
-            });
+            const { data } = await axios.post(
+                `${API_URL}/api/messages/send`,
+                { text, chatId: id },
+                { headers: { Authorization: `Bearer ${user.token}` } }
+            );
 
-            socket.emit("send_message", { ...msg, sender: user._id });
+            socket.emit("send_message", data); // real message return hota hai
+            setMessages(prev => [...prev, data]);
             setText("");
-        } catch (e) { console.log("Send Error:", e); }
+
+        } catch (e) {
+            console.log("Send Error:", e.response?.data || e.message);
+        }
     };
+
 
     return (
         <div className={styles.container}>

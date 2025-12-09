@@ -12,19 +12,29 @@ router.get("/:chatId", protect, async (req, res) => {
 
 // 🔥 SEND MESSAGE
 router.post("/send", protect, async (req, res) => {
-    const msg = await Message.create({
-        chat: req.body.chatId,
-        sender: req.user._id,
-        text: req.body.text
-    });
+    try {
+        const msg = await Message.create({
+            chat: req.body.chatId,
+            sender: req.user._id,  // auth middleware user set karega
+            text: req.body.text
+        });
 
-    // Update Inbox preview
-    await Chat.findByIdAndUpdate(req.body.chatId, {
-        lastMessage: { text: req.body.text, sender: req.user._id, timestamp: new Date() },
-        updatedAt: new Date()
-    });
+        await Chat.findByIdAndUpdate(req.body.chatId, {
+            lastMessage: {
+                text: req.body.text,
+                sender: req.user._id,
+                timestamp: new Date()
+            },
+            updatedAt: new Date()
+        });
 
-    res.json(msg);
+        res.json(msg);
+
+    } catch (err) {
+        console.log("🚨 MESSAGE ERROR:", err.message);
+        res.status(500).json({ message: err.message });
+    }
 });
+
 
 module.exports = router;
