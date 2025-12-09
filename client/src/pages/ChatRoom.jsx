@@ -18,41 +18,39 @@ export default function ChatRoom() {
     const messagesEndRef = useRef(null);
 
     // Auto scroll
-    useEffect(() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }), [messages]);
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
 
-    // Load Chat + Messages -------------------
+    // 🟢 Load chat + messages
     useEffect(() => {
         const load = async () => {
             try {
-                const [msgRes, chatRes] = await Promise.all([
-                    axios.get(`${API_URL}/api/messages/${id}`, {
-                        headers: { Authorization: `Bearer ${user.token}` }
-                    }),
-                    axios.get(`${API_URL}/api/chat/${id}`, {
-                        headers: { Authorization: `Bearer ${user.token}` }
-                    })
-                ]);
+                const msgRes = await axios.get(`${API_URL}/api/messages/${id}`, {
+                    headers: { Authorization: `Bearer ${user.token}` }
+                });
+
+                const chatRes = await axios.get(`${API_URL}/api/chat/${id}`, {
+                    headers: { Authorization: `Bearer ${user.token}` }
+                });
 
                 setMessages(msgRes.data);
                 setOtherUser(chatRes.data.users.find(u => u._id !== user._id));
-            } catch (e) { console.log("Chat Load Error →", e); }
+            } catch (e) {
+                console.log("Chat Load Error →", e.response?.data || e);
+            }
         };
         load();
     }, [id]);
 
-    // Socket Live Receive --------------------------------
+    // 🔥 Live receive from other user
     useEffect(() => {
         socket.emit("join_chat", id);
-
-        socket.on("receive_message", msg => {
-            setMessages(prev => [...prev, msg]); // 🔥 real-time visible
-        });
-
+        socket.on("receive_message", msg => setMessages(p => [...p, msg]));
         return () => socket.off("receive_message");
     }, [id]);
 
-
-    // Send Message ---------------------------------------
+    // 🔥 Send message
     const sendMessage = async () => {
         if (!text.trim()) return;
 
@@ -63,35 +61,35 @@ export default function ChatRoom() {
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );
 
-            socket.emit("send_message", data);   // live to other user
-            setMessages(prev => [...prev, data]); // 🔥 show instantly in frontend
-
-            setText(""); // 🔥 input reset
-
+            setMessages(prev => [...prev, data]); // show instantly
+            socket.emit("send_message", data);    // realtime live
+            setText("");                           // clear input
         } catch (e) {
-            console.log("Send Error:", e.response?.data || e.message);
+            console.log("Send Error:", e.response?.data || e);
         }
     };
 
-
-
     return (
         <div className={styles.container}>
-            <button className={styles.backButton} onClick={() => navigate(-1)}>← Back</button>
-
+            <button className={styles.backButton} onClick={() => navigate(-1)}>←</button>
             <h2>Chat with {otherUser?.name || "Loading..."}</h2>
 
             <div className={styles.chatBox}>
-                {messages.map((m, i) =>
+                {messages.map((m, i) => (
                     <div key={i} className={m.sender === user._id ? styles.me : styles.them}>
                         {m.text}
                     </div>
-                )}
+                ))}
                 <div ref={messagesEndRef} />
             </div>
 
             <div className={styles.inputArea}>
-                <input value={text} onChange={e => setText(e.target.value)} onKeyDown={e => e.key === "Enter" && sendMessage()} />
+                <input
+                    value={text}
+                    onChange={e => setText(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && sendMessage()}
+                    placeholder="Type a message..."
+                />
                 <button onClick={sendMessage}>Send</button>
             </div>
         </div>
