@@ -43,9 +43,14 @@ export default function ChatRoom() {
     // Socket Live Receive --------------------------------
     useEffect(() => {
         socket.emit("join_chat", id);
-        socket.on("receive_message", m => setMessages(prev => [...prev, m]));
+
+        socket.on("receive_message", msg => {
+            setMessages(prev => [...prev, msg]); // 🔥 real-time visible
+        });
+
         return () => socket.off("receive_message");
-    }, []);
+    }, [id]);
+
 
     // Send Message ---------------------------------------
     const sendMessage = async () => {
@@ -54,18 +59,20 @@ export default function ChatRoom() {
         try {
             const { data } = await axios.post(
                 `${API_URL}/api/messages/send`,
-                { text, chatId: id },
+                { chatId: id, text },
                 { headers: { Authorization: `Bearer ${user.token}` } }
             );
 
-            socket.emit("send_message", data); // real message return hota hai
-            setMessages(prev => [...prev, data]);
-            setText("");
+            socket.emit("send_message", data);   // live to other user
+            setMessages(prev => [...prev, data]); // 🔥 show instantly in frontend
+
+            setText(""); // 🔥 input reset
 
         } catch (e) {
             console.log("Send Error:", e.response?.data || e.message);
         }
     };
+
 
 
     return (
