@@ -6,7 +6,6 @@ const router = express.Router();
 const cloudinary = require("../config/cloudinary");
 
 
-// CREATE AD
 router.post("/create", protect, upload.single("image"), async (req, res) => {
     try {
         const { title, description, price, location, category } = req.body;

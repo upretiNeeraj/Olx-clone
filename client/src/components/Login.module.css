@@ -1,5 +1,3 @@
-/* Login.module.css */
-
 .container {
     min-height: 100vh;
     display: flex;
@@ -11,7 +9,6 @@
     overflow: hidden;
 }
 
-/* Animated Background Elements */
 .container::before {
     content: '';
     position: absolute;
@@ -104,7 +101,6 @@
     border-color: #cbd5e0;
 }
 
-/* Floating Labels */
 .input:focus+.floatingLabel,
 .input:not(:placeholder-shown)+.floatingLabel {
     top: -10px;
@@ -166,7 +162,6 @@
     transform: translateY(-1px);
 }
 
-/* Message Styles */
 .successMsg,
 .errorMsg {
     padding: 1rem 1.5rem;
@@ -201,7 +196,6 @@
     color: #c53030;
 }
 
-/* Additional Links */
 .additionalLinks {
     text-align: center;
     margin-top: 2rem;
@@ -221,60 +215,7 @@
     text-decoration: underline;
 }
 
-/* Social Login */
-.socialLogin {
-    margin-top: 2rem;
-}
 
-.socialDivider {
-    text-align: center;
-    position: relative;
-    margin: 1.5rem 0;
-    color: #718096;
-}
-
-.socialDivider::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: #e2e8f0;
-}
-
-.socialDivider span {
-    background: white;
-    padding: 0 1rem;
-    position: relative;
-}
-
-.socialButtons {
-    display: flex;
-    gap: 1rem;
-}
-
-.socialButton {
-    flex: 1;
-    padding: 0.8rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-}
-
-.socialButton:hover {
-    border-color: #667eea;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Password Toggle */
 .passwordToggle {
     position: absolute;
     right: 1rem;
@@ -292,7 +233,6 @@
     color: #667eea;
 }
 
-/* Loading State */
 .buttonLoading {
     position: relative;
     color: transparent;
@@ -322,7 +262,6 @@
     }
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .container {
         padding: 1rem;
@@ -355,13 +294,8 @@
     .title {
         font-size: 1.6rem;
     }
-
-    .socialButtons {
-        flex-direction: column;
-    }
 }
 
-/* Decorative Elements */
 .decoration {
     position: absolute;
     width: 200px;

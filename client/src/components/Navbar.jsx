@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom"; // ✅ use NavLink instead of Link
+import { NavLink, useNavigate } from "react-router-dom";
 import styles from "./Navbar.module.css";
 
 const Navbar = ({ setSearchQuery }) => {
@@ -19,12 +19,10 @@ const Navbar = ({ setSearchQuery }) => {
 
     return (
         <nav className={styles.navbar}>
-            {/* ✅ Logo */}
             <div className={styles.logo} onClick={() => navigate("/")}>
                 MyMarket
             </div>
 
-            {/* ✅ Navigation Links */}
             <div className={styles.links}>
                 <NavLink
                     to="/"

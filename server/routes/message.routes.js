@@ -5,7 +5,6 @@ const Chat = require("../models/chat.model");
 const protect = require("../middleware/authMiddleware");
 
 
-// GET all messages of a chat
 router.get("/:chatId", protect, async (req, res) => {
     try {
         const msgs = await Message.find({ chat: req.params.chatId }).sort({ createdAt: 1 });
@@ -16,7 +15,6 @@ router.get("/:chatId", protect, async (req, res) => {
 });
 
 
-// SEND MESSAGE
 router.post("/send", protect, async (req, res) => {
     try {
         const msg = await Message.create({

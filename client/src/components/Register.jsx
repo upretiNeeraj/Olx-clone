@@ -6,7 +6,6 @@ import styles from "./Register.module.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-// ZOD SCHEMA
 const registerSchema = z.object({
     name: z.string().min(3, "Name must be at least 3 characters"),
     email: z.string().email("Invalid email format"),
@@ -27,16 +26,12 @@ const Register = () => {
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const navigate = useNavigate();
 
-    // UI Password Strength
     const calculatePasswordStrength = (password) => {
         let s = 0;
         if (password.length >= 8) s++;
         if (/[a-z]/.test(password) && /[A-Z]/.test(password)) s++;
         if (/\d/.test(password)) s++;
         if (/[^a-zA-Z0-9]/.test(password)) s++;
-        // console.log("password score = ", s);
-        // console.log("class = ", ["", "weak", "medium", "strong", "very-strong"][s]);
-
         setPasswordStrength(["", "weak", "medium", "strong", "very-strong"][s]);
     };
 
@@ -72,7 +67,6 @@ const Register = () => {
         setMessage("");
         setLoading(true);
 
-        // ZOD VALIDATION FIRST
         const result = registerSchema.safeParse(formData);
 
         if (!result.success) {
@@ -89,7 +83,6 @@ const Register = () => {
             return;
         }
 
-        // IF VALID -> SEND REQUEST
         try {
             const res = await axios.post(`${API_URL}/api/auth/register`, formData);
             localStorage.setItem("userInfo", JSON.stringify(res.data));
@@ -111,21 +104,18 @@ const Register = () => {
 
                 <form onSubmit={handleSubmit} className={styles.form}>
 
-                    {/* Name */}
                     <div className={styles.inputGroup}>
                         <input type="text" name="name" placeholder=" " value={formData.name}
                             onChange={handleChange} className={styles.input} required />
                         <label className={styles.floatingLabel}>Full Name</label>
                     </div>
 
-                    {/* Email */}
                     <div className={styles.inputGroup}>
                         <input type="email" name="email" placeholder=" " value={formData.email}
                             onChange={handleChange} className={styles.input} required />
                         <label className={styles.floatingLabel}>Email Address</label>
                     </div>
 
-                    {/* Password */}
                     <div className={styles.inputGroup}>
                         <input type={showPassword ? "text" : "password"} name="password"
                             placeholder=" " value={formData.password} onChange={handleChange}
@@ -148,7 +138,6 @@ const Register = () => {
                         )}
                     </div>
 
-                    {/* Terms */}
                     <div className={styles.terms}>
                         <input type="checkbox" id="terms" checked={acceptedTerms}
                             onChange={(e) => setAcceptedTerms(e.target.checked)} required />

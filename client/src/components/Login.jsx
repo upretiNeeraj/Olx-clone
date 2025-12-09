@@ -38,7 +38,6 @@ const Login = () => {
         if (updated <= 0) {
           setMessage("⛔ Too many attempts! Try again after 15 min.");
 
-          // Optional frontend cooldown reset
           setTimeout(() => setFailedCount(3), 15 * 60 * 1000);
 
           return 0;
@@ -128,20 +127,7 @@ const Login = () => {
           </p>
         </div>
 
-        <div className={styles.socialLogin}>
-          <div className={styles.socialDivider}>
-            <span>Or continue with</span>
-          </div>
 
-          <div className={styles.socialButtons}>
-            <button type="button" className={styles.socialButton}>
-              🔵 Google
-            </button>
-            <button type="button" className={styles.socialButton}>
-              ⚫ GitHub
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

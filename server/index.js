@@ -4,14 +4,13 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const sitemapRoute = require("./routes/sitemap.routes.js");
 const compression = require("compression");
-// const authLimiter = require("./middleware/rateLimitMiddleware.js")
 
 
 dotenv.config();
 connectDB();
 
 const app = express();
-app.set("trust proxy", 1); // <<--- This is the fix
+app.set("trust proxy", 1);
 
 app.use(cors({
     origin: ["https://olx-clone-jade-nine.vercel.app", "*"],
@@ -51,7 +50,7 @@ const io = new Server(server, {
 
 
 io.on("connection", (socket) => {
-    console.log("🟢 User connected:", socket.id);
+    console.log(" User connected:", socket.id);
 
     socket.on("join_chat", (chatId) => {
         socket.join(chatId);
@@ -62,7 +61,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
-        console.log("🔴 User disconnected:", socket.id);
+        console.log(" User disconnected:", socket.id);
     });
 });
 

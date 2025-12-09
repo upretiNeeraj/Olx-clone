@@ -3,7 +3,6 @@ const router = express.Router();
 const Chat = require("../models/chat.model");
 const protect = require("../middleware/authMiddleware");
 
-// Create or Get chat
 router.post("/start", protect, async (req, res) => {
     try {
         const { sellerId } = req.body;
@@ -23,12 +22,11 @@ router.post("/start", protect, async (req, res) => {
 });
 
 
-// 🟢 FIXED — Load Chat List with Proper Last Message Format
 router.get("/my", protect, async (req, res) => {
     try {
         const chats = await Chat.find({ users: req.user._id })
             .populate("users", "name email")
-            .sort({ updatedAt: -1 }); // 🔥 newest first
+            .sort({ updatedAt: -1 }); 
 
         res.json(chats);
     } catch (err) {
@@ -36,7 +34,6 @@ router.get("/my", protect, async (req, res) => {
     }
 });
 
-// Get single chat details
 router.get("/:id", protect, async (req, res) => {
     try {
         const chat = await Chat.findById(req.params.id)
