@@ -91,8 +91,24 @@ const Register = () => {
             setMessage("🎉 Registration Successful!");
 
             setTimeout(() => navigate("/profile"), 1200);
-        } catch (err) {
-            setMessage(err.response?.data?.message || "❌ Something went wrong");
+        } catch (error) {
+            setFailedCount(prev => {
+                const updated = prev - 1;
+
+                if (updated <= 0) {
+                    setMessage("⛔ Too many attempts! Try again after 15 min.");
+                    setTimeout(() => setFailedCount(3), 15 * 60 * 1000);
+                    return 0;
+                }
+
+                const serverMsg = error?.response?.data?.message;
+                setMessage(serverMsg
+                    ? `❌ ${serverMsg}`
+                    : `❌ Invalid credentials — attempts left: ${updated}`
+                );
+
+                return updated;
+            });
         } finally {
             setLoading(false);
         }
