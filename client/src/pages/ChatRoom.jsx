@@ -5,185 +5,150 @@ import { io } from "socket.io-client";
 import styles from "./ChatRoom.module.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
-const socket = io(`${API_URL}`, {
-    transports: ["websocket"],
-});
+const socket = io(`${API_URL}`, { transports: ["websocket"] });
 
 const ChatRoom = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("userInfo"));
+
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const [otherUser, setOtherUser] = useState(null);
     const [connectionStatus, setConnectionStatus] = useState("connecting");
     const messagesEndRef = useRef(null);
 
-    // Scroll to bottom of messages
+    // Scroll always bottom
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
+    useEffect(scrollToBottom, [messages]);
 
+    // Fetch chat + messages
     useEffect(() => {
-        scrollToBottom();
-    }, [messages]);
-
-    // Fetch previous messages and chat info
-    useEffect(() => {
-        const fetchData = async () => {
+        const loadChat = async () => {
             try {
-                const [messagesRes, chatRes] = await Promise.all([
+                const [msgs, chat] = await Promise.all([
                     axios.get(`${API_URL}/api/messages/${id}`),
                     axios.get(`${API_URL}/api/chat/${id}`, {
-                        headers: { Authorization: `Bearer ${user.token}` }
+                        headers: { Authorization: `Bearer ${user?.token}` }
                     })
                 ]);
 
-                setMessages(messagesRes.data);
-
-                // Find other user in chat
-                const other = chatRes.data.users.find(u => u._id !== user._id);
+                setMessages(msgs?.data ?? []);
+                const other = chat?.data?.users?.find(u => u?._id !== user?._id) || null;
                 setOtherUser(other);
-            } catch (error) {
-                console.error("Error fetching chat data:", error);
+
+            } catch (err) {
+                console.error("Chat Load Error →", err);
             }
         };
-        fetchData();
+        loadChat();
     }, [id, user]);
 
-    // Socket connection events
+    // Socket events
     useEffect(() => {
         socket.emit("join_chat", id);
 
         socket.on("connect", () => setConnectionStatus("connected"));
         socket.on("disconnect", () => setConnectionStatus("disconnected"));
-        socket.on("connect_error", () => setConnectionStatus("disconnected"));
-
-        socket.on("receive_message", (msg) => {
-            setMessages(prev => [...prev, msg]);
-        });
+        socket.on("receive_message", msg => setMessages(p => [...p, msg]));
 
         return () => {
             socket.off("receive_message");
             socket.off("connect");
             socket.off("disconnect");
-            socket.off("connect_error");
         };
     }, [id]);
 
+    // Send msg
     const sendMessage = async () => {
         if (!text.trim()) return;
-
-        const newMsg = {
+        const msg = {
             chatId: id,
-            sender: user._id,
+            sender: user?._id,
             text: text.trim(),
             timestamp: new Date()
         };
-
         try {
-            await axios.post(`${API_URL}/api/messages/send`, newMsg);
-            socket.emit("send_message", newMsg);
+            await axios.post(`${API_URL}/api/messages/send`, msg);
+            socket.emit("send_message", msg);
             setText("");
-        } catch (error) {
-            console.error("Error sending message:", error);
+        } catch (err) {
+            console.error("Send Error →", err);
         }
     };
 
-    const handleKeyDown = (e) => {
+    // Enter to Send
+    const handleKey = e => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
         }
     };
 
-    const formatTime = (timestamp) => {
-        if (!timestamp) return "";
-        const date = new Date(timestamp);
-        return date.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-        });
+    // Format time
+    const formatTime = (t) => {
+        if (!t) return "now";
+        return new Date(t).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
     };
 
-    const getUserInitials = (name) => {
-        return name ? name.charAt(0).toUpperCase() : 'U';
-    };
+    // Initials
+    const initials = name => name?.[0]?.toUpperCase() || "U";
 
     return (
         <div className={styles.container}>
-            {/* Connection Status */}
+
+            {/* STATUS BAR */}
             <div className={`${styles.connectionStatus} ${styles[connectionStatus]}`}>
-                <div className={styles.statusDot}></div>
-                {connectionStatus === "connected" ? "Connected" :
-                    connectionStatus === "connecting" ? "Connecting..." : "Disconnected"}
+                ● {connectionStatus}
             </div>
 
-            {/* Chat Header */}
+            {/* HEADER */}
             <div className={styles.chatHeader}>
-                <button
-                    className={styles.backButton}
-                    onClick={() => navigate(-1)}
-                >
-                    ←
-                </button>
+                <button className={styles.backButton} onClick={() => navigate(-1)}>←</button>
 
-                {otherUser && (
+                {otherUser ? (
                     <>
-                        <div className={styles.userAvatar}>
-                            {getUserInitials(otherUser.name)}
-                        </div>
+                        <div className={styles.userAvatar}>{initials(otherUser?.name)}</div>
                         <div className={styles.userInfo}>
-                            <h3>{otherUser.name}</h3>
+                            <h3>{otherUser?.name}</h3>
                             <p>Online</p>
                         </div>
                     </>
+                ) : (
+                    <p>Loading user...</p> // important fallback
                 )}
             </div>
 
-            {/* Messages Area */}
+            {/* CHAT BOX */}
             <div className={styles.chatBox}>
-                {messages.length === 0 ? (
-                    <div className={styles.emptyState}>
-                        <div className={styles.emptyStateIcon}>💬</div>
-                        <h3>No messages yet</h3>
-                        <p>Start the conversation by sending a message!</p>
-                    </div>
-                ) : (
-                    messages.map((msg, index) => (
-                        <div
-                            key={index}
-                            className={`${styles.message} ${msg.sender === user._id ? styles.myMessage : styles.otherMessage
-                                }`}
-                        >
-                            <div>{msg.text}</div>
-                            <div className={styles.messageTime}>
-                                {formatTime(msg.timestamp || msg.createdAt)}
-                            </div>
+                {messages?.length > 0 ? (
+                    messages?.map((m, i) => (
+                        <div key={i} className={`${styles.message} ${m?.sender === user?._id ? styles.myMessage : styles.otherMessage}`}>
+                            <div>{m?.text ?? "No message"}</div>
+                            <span className={styles.messageTime}>{formatTime(m?.timestamp ?? m?.createdAt)}</span>
                         </div>
                     ))
+                ) : (
+                    <div className={styles.emptyState}>
+                        <h3>No messages yet</h3>
+                        <p>Start chatting...</p>
+                    </div>
                 )}
-                <div ref={messagesEndRef} />
+                <div ref={messagesEndRef}></div>
             </div>
 
-            {/* Input Area */}
+            {/* INPUT AREA */}
             <div className={styles.inputArea}>
-                <div className={styles.inputWrapper}>
-                    <textarea
-                        className={styles.textInput}
-                        value={text}
-                        rows={1}
-                        onChange={(e) => setText(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        placeholder="Type your message..."
-                    />
-                </div>
-                <button
-                    className={styles.sendButton}
-                    onClick={sendMessage}
-                    disabled={!text.trim()}
-                >
+                <textarea
+                    className={styles.textInput}
+                    placeholder="Type your message..."
+                    value={text}
+                    onChange={e => setText(e.target.value)}
+                    onKeyDown={handleKey}
+                />
+                <button className={styles.sendButton} onClick={sendMessage} disabled={!text.trim()}>
                     Send
                 </button>
             </div>
