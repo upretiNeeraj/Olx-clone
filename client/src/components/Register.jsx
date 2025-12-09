@@ -92,23 +92,8 @@ const Register = () => {
 
             setTimeout(() => navigate("/profile"), 1200);
         } catch (error) {
-            setFailedCount(prev => {
-                const updated = prev - 1;
+            setMessage("something went wrong")
 
-                if (updated <= 0) {
-                    setMessage("⛔ Too many attempts! Try again after 15 min.");
-                    setTimeout(() => setFailedCount(3), 15 * 60 * 1000);
-                    return 0;
-                }
-
-                const serverMsg = error?.response?.data?.message;
-                setMessage(serverMsg
-                    ? `❌ ${serverMsg}`
-                    : `❌ Invalid credentials — attempts left: ${updated}`
-                );
-
-                return updated;
-            });
         } finally {
             setLoading(false);
         }
