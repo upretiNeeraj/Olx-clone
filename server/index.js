@@ -11,6 +11,8 @@ dotenv.config();
 connectDB();
 
 const app = express();
+app.set("trust proxy", 1); // <<--- This is the fix
+
 app.use(cors({
     origin: "https://olx-clone-jade-nine.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
