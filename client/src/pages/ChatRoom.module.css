@@ -1,120 +1,239 @@
 .container {
-    width: 100%;
-    max-width: 650px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
     height: 100vh;
-    margin: auto;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
 }
 
-/* Back */
 .backButton {
-    background: none;
-    padding: 12px 14px;
-    color: white;
-    border: none;
-    font-size: 18px;
+    align-self: flex-start;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #4b5563;
     cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* CHAT WINDOW */
+.backButton:hover {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    transform: translateX(-2px);
+}
+
+h2 {
+    font-size: 24px;
+    color: #1f2937;
+    margin: 0 0 20px 0;
+    padding: 16px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    font-weight: 600;
+    border-left: 4px solid #6366f1;
+}
+
+/* Chat Box */
 .chatBox {
     flex: 1;
     overflow-y: auto;
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 14px;
+    gap: 16px;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06),
+        inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    scrollbar-width: thin;
+    scrollbar-color: #c7d2fe #f1f5f9;
 }
 
-/* Your Msg */
+.chatBox::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chatBox::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+}
+
+.chatBox::-webkit-scrollbar-thumb {
+    background: #c7d2fe;
+    border-radius: 3px;
+}
+
+/* Message Bubbles */
+.me,
+.them {
+    max-width: 70%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    line-height: 1.4;
+    position: relative;
+    word-wrap: break-word;
+    animation: messageAppear 0.3s ease-out;
+}
+
+@keyframes messageAppear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .me {
     align-self: flex-end;
-    background: #7c4dff;
-    padding: 10px 15px;
-    max-width: 75%;
-    color: #fff;
-    border-radius: 14px 14px 3px 14px;
-    animation: pop .2s ease;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.3);
 }
 
-/* Other User */
 .them {
     align-self: flex-start;
-    background: #1e1e1e;
-    padding: 10px 15px;
-    max-width: 75%;
-    color: #ececec;
-    border-radius: 14px 14px 14px 3px;
-    animation: pop .25s ease;
+    background: #f3f4f6;
+    color: #1f2937;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
-/* INPUT BAR */
+.me::after,
+.them::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 12px;
+    height: 12px;
+}
+
+.me::after {
+    right: -6px;
+    background: linear-gradient(135deg, transparent 50%, #6366f1 50%);
+}
+
+.them::after {
+    left: -6px;
+    background: linear-gradient(225deg, transparent 50%, #f3f4f6 50%);
+}
+
+/* Input Area */
 .inputArea {
     display: flex;
-    gap: 10px;
-    padding: 12px;
-    background: #00000040;
+    gap: 12px;
+    padding: 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
 }
 
 .inputArea input {
     flex: 1;
-    background: #151515;
-    border: none;
-    color: white;
-    font-size: 15px;
-    padding: 12px;
-    border-radius: 8px;
+    padding: 14px 20px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    color: #1f2937;
+    transition: all 0.2s ease;
+    background: #f9fafb;
+    outline: none;
+}
+
+.inputArea input:focus {
+    border-color: #6366f1;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .inputArea input::placeholder {
-    color: #999;
+    color: #9ca3af;
 }
 
 .inputArea button {
-    background: #7d4dff;
-    border: none;
-    padding: 12px 18px;
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
     color: white;
-    transition: .2s;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
 }
 
 .inputArea button:hover {
-    background: #9a6aff;
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
 }
 
-/* 👇 MOBILE SCALE */
-@media(max-width:550px) {
+.inputArea button:active {
+    transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
     .container {
-        border-radius: 0;
-        height: 100vh;
+        padding: 16px;
+        height: calc(100vh - 60px);
+    }
+
+    .backButton {
+        padding: 8px 16px;
+        font-size: 15px;
+    }
+
+    h2 {
+        font-size: 20px;
+        padding: 14px 16px;
+    }
+
+    .chatBox {
+        padding: 20px 16px;
+        border-radius: 14px;
     }
 
     .me,
     .them {
         max-width: 85%;
-        font-size: 14px;
-    }
-
-    .chatBox {
-        padding: 10px;
+        padding: 10px 14px;
+        font-size: 15px;
     }
 
     .inputArea {
-        padding: 10px;
-        gap: 7px;
+        padding: 16px;
+    }
+
+    .inputArea input {
+        padding: 12px 16px;
+        font-size: 15px;
     }
 
     .inputArea button {
-        padding: 10px 14px;
-        font-size: 13px;
+        padding: 12px 24px;
+        font-size: 15px;
     }
 }

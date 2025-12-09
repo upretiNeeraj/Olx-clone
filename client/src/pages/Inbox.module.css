@@ -1,119 +1,235 @@
 .container {
-    width: 100%;
-    max-width: 650px;
-    margin: auto;
-    padding: 18px;
-    color: #fff;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
 }
 
 .heading {
-    text-align: center;
-    font-size: 22px;
-    margin-bottom: 15px;
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 24px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* List Wrapper */
+/* Loading State */
+.loadingContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.loadingChat {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.loadingAvatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+.loadingText {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.loadingName {
+    width: 120px;
+    height: 16px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+.loadingMessage {
+    width: 180px;
+    height: 14px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+@keyframes loading {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Empty State */
+.emptyState {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.emptyStateIcon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.emptyState h3 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.emptyState p {
+    color: #666;
+    font-size: 16px;
+    max-width: 300px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* Chats List */
 .chatsContainer {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-/* Each Chat Box */
 .chatItem {
-    background: rgba(255, 255, 255, 0.08);
-    padding: 14px;
-    border-radius: 12px;
+    text-decoration: none;
+    display: block;
+    animation: fadeIn 0.3s ease-out forwards;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chatContent {
     display: flex;
     align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    border: 1px solid transparent;
-    transition: .25s ease;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.chatItem:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: #a77dff;
-    transform: scale(1.02);
+.chatContent:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    background: #fafafa;
 }
 
-/* Avatar */
+.chatContent::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: linear-gradient(to bottom, #6366f1, #8b5cf6);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.chatContent:hover::before {
+    opacity: 1;
+}
+
+.avatarContainer {
+    position: relative;
+    margin-right: 16px;
+}
+
 .userAvatar {
-    width: 45px;
-    height: 45px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
+    font-weight: 600;
     font-size: 18px;
-    background: linear-gradient(135deg, #7a44ff, #c48bff);
-    color: #fff;
-    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(99, 102, 241, 0.2);
 }
 
-/* Info */
 .userInfo {
     flex: 1;
+    min-width: 0;
 }
 
 .userName {
-    color: #fff;
-    font-size: 17px;
+    font-size: 16px;
+    color: #333;
+    margin: 0 0 6px 0;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .lastMessage {
-    font-size: 13px;
-    color: #cfcfcf;
-    margin-top: 3px;
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Right */
 .chatMeta {
-    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    margin-left: 16px;
+}
+
+.timestamp {
     font-size: 12px;
-    color: #d8d8d8;
+    color: #888;
+    white-space: nowrap;
 }
 
 .unreadBadge {
-    background: #7d4dff;
-    padding: 3px 9px;
-    border-radius: 40px;
-    font-size: 11px;
-    font-weight: bold;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
     color: white;
-}
-
-/* EMPTY UI */
-.emptyState {
-    text-align: center;
-    margin-top: 40px;
-    opacity: 0.65;
-}
-
-.emptyStateIcon {
-    font-size: 42px;
-    margin-bottom: 6px;
-}
-
-/* 📱 MOBILE RESPONSIVE */
-@media(max-width:550px) {
-    .chatItem {
-        padding: 10px;
-    }
-
-    .userAvatar {
-        width: 38px;
-        height: 38px;
-        font-size: 16px;
-    }
-
-    .userName {
-        font-size: 15.5px;
-    }
-
-    .lastMessage {
-        font-size: 12px;
-    }
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
 }
