@@ -36,5 +36,22 @@ router.get("/my", protect, async (req, res) => {
     }
 });
 
+// Get single chat details
+router.get("/:id", protect, async (req, res) => {
+    try {
+        const chat = await Chat.findById(req.params.id)
+            .populate("users", "name email");
+
+        if (!chat) return res.status(404).json({ message: "Chat not found" });
+
+        res.json(chat);
+
+    } catch (err) {
+        console.log("Single Chat Load Error:", err);
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
 
 module.exports = router;
